@@ -1,0 +1,118 @@
+/* Estilos generales */
+body { 
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+    padding: 20px;
+    background-image: url(Fondo.jpg); /* Cambia la ruta a la imagen deseada */
+    background-size: cover; /* Ajusta la imagen para que cubra toda la pantalla */
+    background-position: center; /* Centra la imagen en la pantalla */
+    background-repeat: no-repeat; /* Evita que la imagen se repita */
+}
+
+h1 {
+    margin-bottom: 20px;
+    color: #333;
+    font-size: 2em;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Estilos para el selector de nombre */
+.register-form {
+    background-color: rgba(255, 255, 255, 0.8); /* Fondo blanco semitransparente */
+    padding: 15px 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.register-form label {
+    font-size: 1.2em;
+    color: #333;
+    margin-right: 10px;
+}
+
+.register-form select {
+    padding: 8px 12px;
+    font-size: 1em;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.register-form button {
+    padding: 8px 16px;
+    font-size: 1em;
+    color: white;
+    background-color: #4CAF50;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.register-form button:hover {
+    background-color: #45a049;
+}
+
+/* Estilos para las ubicaciones */
+.locations {
+    display: flex;
+    gap: 20px;
+}
+
+.location {
+    width: 170px;
+    height: 600px;
+    border: 2px solid #333;
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto;
+    background-color: rgba(240, 240, 240, 0.2); /* Fondo semitransparente */
+}
+
+/* Estilos para las personas */
+.person {
+    margin: 5px 0;
+    padding: 10px;
+    background-color: #87CEFA;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.person-grupo1 {
+    background-color: #6bfa0b;
+    color: white;
+}
+
+.person-grupo2 {
+    background-color: #c9cf18;
+    color: white;
+}
+
+.person-grupo3 {
+    background-color: #300797;
+    color: white;
+}
+
+.person-grupo4 {
+    background-color: #00c3ff;
+    color: white;
+}
+
+.person-grupo5 {
+    background-color: #f09825;
+    color: white;
+}
+
+.person-grupo6 {
+    background-color: #f40b0b;
+    color: white;
+}
