@@ -87,3 +87,48 @@ document.addEventListener("DOMContentLoaded", () => {
         obtenerUbicacion();
     });
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+    const locations = document.querySelectorAll(".location");
+
+    // Cargar ubicaciones guardadas de Local Storage al iniciar
+    cargarUbicaciones();
+
+    // Guardar ubicaciones en Local Storage después de cada movimiento
+    locations.forEach(location => {
+        new Sortable(location, {
+            group: "shared",
+            animation: 150,
+            onEnd: function (evt) {
+                guardarUbicaciones();
+            }
+        });
+    });
+});
+
+// Función para guardar ubicaciones en Local Storage
+function guardarUbicaciones() {
+    const data = {};
+    document.querySelectorAll(".location").forEach(location => {
+        const locationId = location.id;
+        data[locationId] = Array.from(location.children).map(person => person.textContent);
+    });
+    localStorage.setItem("ubicaciones", JSON.stringify(data));
+}
+
+// Función para cargar ubicaciones desde Local Storage
+function cargarUbicaciones() {
+    const data = JSON.parse(localStorage.getItem("ubicaciones"));
+    if (!data) return;
+
+    document.querySelectorAll(".location").forEach(location => {
+        const locationId = location.id;
+        const personas = data[locationId] || [];
+        personas.forEach(nombre => {
+            const person = document.createElement("div");
+            person.className = "person";
+            person.textContent = nombre;
+            location.appendChild(person);
+        });
+    });
+}
