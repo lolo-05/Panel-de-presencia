@@ -87,3 +87,26 @@ document.addEventListener("DOMContentLoaded", () => {
         obtenerUbicacion();
     });
 });
+
+
+// Función para registrar ubicación
+async function registrarUbicacion(nombre, ubicacion) {
+    try {
+        await db.collection("ubicaciones").doc(nombre).set({
+            nombre: nombre,
+            ubicacion: ubicacion,
+            timestamp: new Date()
+        });
+        console.log("Ubicación registrada correctamente.");
+    } catch (error) {
+        console.error("Error al registrar la ubicación:", error);
+    }
+}
+
+// Cuando se envíe el formulario
+document.getElementById("registerForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const nombre = document.getElementById("username").value;
+    const ubicacion = determinarUbicacion(); // Ajusta esta función según tu lógica
+    registrarUbicacion(nombre, ubicacion);
+});
