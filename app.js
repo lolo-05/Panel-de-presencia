@@ -88,44 +88,26 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
 
-// Función para registrar ubicación
-async function registrarUbicacion(nombre, ubicacion) {
-    try {
-        await db.collection("ubicaciones").doc(nombre).set({
-            nombre: nombre,
-            ubicacion: ubicacion,
-            timestamp: new Date()
-        });
-        console.log("Ubicación registrada correctamente.");
-    } catch (error) {
-        console.error("Error al registrar la ubicación:", error);
-    }
-}
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyDOHPagA5tTsapHT7mLp9Go-JCAVc4ChhI",
+    authDomain: "ubicaion-8ef85.firebaseapp.com",
+    projectId: "ubicaion-8ef85",
+    storageBucket: "ubicaion-8ef85.firebasestorage.app",
+    messagingSenderId: "629776815605",
+    appId: "1:629776815605:web:713437877558e185d6fcbc",
+    measurementId: "G-2943V443QZ"
+  };
 
-// Cuando se envíe el formulario
-document.getElementById("registerForm").addEventListener("submit", (e) => {
-    e.preventDefault();
-    const nombre = document.getElementById("username").value;
-    const ubicacion = determinarUbicacion(); // Ajusta esta función según tu lógica
-    registrarUbicacion(nombre, ubicacion);
-});
-
-// Función para obtener y mostrar las ubicaciones en tiempo real
-function mostrarUbicaciones() {
-    db.collection("ubicaciones").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
-        const container = document.querySelector(".locations");
-        container.innerHTML = ""; // Limpia la lista antes de actualizar
-
-        snapshot.forEach((doc) => {
-            const data = doc.data();
-            const ubicacionDiv = document.createElement("div");
-            ubicacionDiv.className = "person";
-            ubicacionDiv.textContent = `${data.nombre}: ${data.ubicacion}`;
-            container.appendChild(ubicacionDiv);
-        });
-    });
-}
-
-// Llama a mostrarUbicaciones para comenzar a escuchar los cambios
-mostrarUbicaciones();
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
