@@ -110,3 +110,22 @@ document.getElementById("registerForm").addEventListener("submit", (e) => {
     const ubicacion = determinarUbicacion(); // Ajusta esta función según tu lógica
     registrarUbicacion(nombre, ubicacion);
 });
+
+// Función para obtener y mostrar las ubicaciones en tiempo real
+function mostrarUbicaciones() {
+    db.collection("ubicaciones").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
+        const container = document.querySelector(".locations");
+        container.innerHTML = ""; // Limpia la lista antes de actualizar
+
+        snapshot.forEach((doc) => {
+            const data = doc.data();
+            const ubicacionDiv = document.createElement("div");
+            ubicacionDiv.className = "person";
+            ubicacionDiv.textContent = `${data.nombre}: ${data.ubicacion}`;
+            container.appendChild(ubicacionDiv);
+        });
+    });
+}
+
+// Llama a mostrarUbicaciones para comenzar a escuchar los cambios
+mostrarUbicaciones();
