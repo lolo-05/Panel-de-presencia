@@ -65,17 +65,3 @@
         </div>
     </div>
 
-    <!-- Librerías JavaScript y Script Principal -->
-    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.10.2/Sortable.min.js"></script>
-    <script src="app.js"></script>
-</body>
-</html>
-
-FileInputStream serviceAccount =
-new FileInputStream("path/to/serviceAccountKey.json");
-
-FirebaseOptions options = new FirebaseOptions.Builder()
-  .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-  .build();
-
-FirebaseApp.initializeApp(options);
