@@ -2,34 +2,21 @@
 body { 
     font-family: Arial, sans-serif;
     display: flex;
-    justify-content: center;
-    align-items: center;
     flex-direction: column;
-    min-height: 100vh; /* Asegura que el contenido ocupe toda la altura de la ventana */
+    align-items: center;
     margin: 0;
     padding: 20px;
     background-image: url(Fondo.jpg); /* Cambia la ruta a la imagen deseada */
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+    background-size: cover; /* Ajusta la imagen para que cubra toda la pantalla */
+    background-position: center; /* Centra la imagen en la pantalla */
+    background-repeat: no-repeat; /* Evita que la imagen se repita */
 }
 
-/* Contenedor principal centrado */
-.container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    max-width: 1200px; /* Ajusta el ancho máximo si es necesario */
-}
-
-/* Estilos para el encabezado */
 h1 {
     margin-bottom: 20px;
     color: #333;
-    font-size: 2.5em;
+    font-size: 2em;
     text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3);
-    text-align: center; /* Centra el texto */
 }
 
 /* Estilos para el selector de nombre */
@@ -42,7 +29,6 @@ h1 {
     text-align: center;
 }
 
-/* Otros estilos permanecen igual */
 .register-form label {
     font-size: 1.2em;
     color: #333;
@@ -101,10 +87,32 @@ h1 {
     text-align: center;
 }
 
-/* Estilos para personas por grupo */
-.person-grupo1 { background-color: #6bfa0b; color: white; }
-.person-grupo2 { background-color: #c9cf18; color: white; }
-.person-grupo3 { background-color: #300797; color: white; }
-.person-grupo4 { background-color: #00c3ff; color: white; }
-.person-grupo5 { background-color: #f09825; color: white; }
-.person-grupo6 { background-color: #f40b0b; color: white; }
+.person-grupo1 {
+    background-color: #6bfa0b;
+    color: white;
+}
+
+.person-grupo2 {
+    background-color: #c9cf18;
+    color: white;
+}
+
+.person-grupo3 {
+    background-color: #300797;
+    color: white;
+}
+
+.person-grupo4 {
+    background-color: #00c3ff;
+    color: white;
+}
+
+.person-grupo5 {
+    background-color: #f09825;
+    color: white;
+}
+
+.person-grupo6 {
+    background-color: #f40b0b;
+    color: white;
+}
