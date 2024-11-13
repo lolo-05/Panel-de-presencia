@@ -1,13 +1,11 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const locations = document.querySelectorAll(".location");
-
     // Lista de ubicaciones y coordenadas
     const ubicaciones = [
         { id: "ubicacion1", nombre: "Fin de la Jornada", latitud: null, longitud: null },
         { id: "ubicacion2", nombre: "Utrera", latitud: 37.2071, longitud: -5.8204 },
         { id: "ubicacion3", nombre: "Cerrado", latitud: 37.1294, longitud: -5.8377 },
         { id: "ubicacion4", nombre: "Coronil", latitud: 37.0855, longitud: -5.6115 },
-        { id: "ubicacion5", nombre: "Otra Localizacion", latitud: null, longitud: null },
+        { id: "ubicacion5", nombre: "Otra Localización", latitud: null, longitud: null },
     ];
 
     // Función para calcular la distancia entre dos puntos
@@ -49,17 +47,21 @@ document.addEventListener("DOMContentLoaded", () => {
             const personaNombre = document.getElementById("username").value;
             let personaDiv = document.querySelector(`.person[data-nombre='${personaNombre}']`);
 
+            // Crear la personaDiv si no existe
             if (!personaDiv) {
                 personaDiv = document.createElement("div");
                 personaDiv.className = "person";
                 personaDiv.dataset.nombre = personaNombre;
                 personaDiv.textContent = personaNombre;
-            } else if (personaDiv.parentNode) {
-                personaDiv.parentNode.removeChild(personaDiv);
             }
 
+            // Si la persona ya está en la ubicación asignada, no hacer nada
             const nuevaUbicacion = document.getElementById(ubicacionCercana.id);
-            if (nuevaUbicacion) {
+            if (nuevaUbicacion && !nuevaUbicacion.contains(personaDiv)) {
+                // Remover de la ubicación anterior y agregar a la nueva
+                if (personaDiv.parentNode) {
+                    personaDiv.parentNode.removeChild(personaDiv);
+                }
                 nuevaUbicacion.appendChild(personaDiv);
             }
         }
@@ -83,8 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Manejar el envío del formulario de registro
     document.getElementById("registerForm").addEventListener("submit", event => {
-        event.preventDefault();
+        event.preventDefault(); // Evita que se recargue la página
         obtenerUbicacion();
     });
 });
-
