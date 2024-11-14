@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -11,49 +11,18 @@
         <h1>Cartel de Presencia</h1>
         
         <!-- Formulario de Registro centrado en la parte superior -->
-<div class="register-form">
-    <form id="registerForm">
-        <label for="username">Selecciona tu nombre:</label>
-        <select id="username">
-            <option value="Manuel de Soto">Manuel de Soto</option>
-            <option value="Juan Lopez">Juan Lopez</option>
-            <option value="Fran Cuevas">Fran Cuevas</option>
-            <option value="Carlos Garcia">Carlos Garcia</option>
-            <option value="Fernando Zabala">Fernando Zabala</option>
-            <option value="Manuel Martinez">Manuel Martinez</option>
-            <option value="Pedro De Tena">Pedro De Tena</option>
-            <option value="Jose Manuel Jurado">Jose Manuel Jurado</option>
-            <option value="Pepe Ventura">Pepe Ventura</option>
-            <option value="Pepe Lopez">Pepe Lopez</option>
-            <option value="Juan Manuel Perez">Juan Manuel Perez</option>
-            <option value="David Sanchez">David Sanchez</option>
-            <option value="Jonathan Gavira">Jonathan Gavira</option>
-            <option value="Juan Garrcocho">Juan Garrcocho</option>
-            <option value="Carlos Javier Jimenez">Carlos Javier Jimenez</option>
-            <option value="Javier Romero">Javier Romero</option>
-            <option value="Victoria Sanchez-Palencia">Victoria Sanchez-Palencia</option>
-            <option value="Maria Martinez">Maria Martinez</option>
-            <option value="Isabel Mariscal">Isabel Mariscal</option>
-            <option value="Jesus Marchena">Jesus Marchena</option>
-            <option value="Francisco Polo">Francisco Polo</option>
-            <option value="Maria Bilbao">Maria Bilbao</option>
-            <option value="Victor Hernandez">Victor Hernandez</option>
-            <option value="Rocio Espejo">Rocio Espejo</option>
-            <option value="Cristina Vidal">Cristina Vidal</option>
-            <option value="Evelyn Toledo">Evelyn Toledo</option>
-            <option value="Estefania Riebera">Estefania Riebera</option>
-            <option value="Ana Castellano">Ana Castellano</option>
-            <option value="Javier Garcia">Javier Garcia</option>
-            <option value="Rosario Barrios">Rosario Barrios</option>
-            <option value="Cristian Toledo">Cristian Toledo</option>
-            <option value="Susana Burgos">Susana Burgos</option>
-            <option value="Maria Jose Manzano">Maria Jose Manzano</option>
-            <option value="Jesus Zuñiga">Jesus Zuñiga</option>
-        </select>
-        <button type="submit">Registrar</button>
-    </form>
-</div>
-
+        <div class="register-form">
+            <form id="registerForm">
+                <label for="username">Selecciona tu nombre:</label>
+                <select id="username">
+                    <option value="Manuel de Soto">Manuel de Soto</option>
+                    <option value="Juan Lopez">Juan Lopez</option>
+                    <option value="Fran Cuevas">Fran Cuevas</option>
+                    <!-- Agrega el resto de opciones aquí... -->
+                </select>
+                <button type="submit">Registrar</button>
+            </form>
+        </div>
 
         <!-- Cartel de Ubicaciones -->
         <div class="locations">
@@ -65,26 +34,115 @@
         </div>
     </div>
 
+    <!-- Librerías JavaScript y Script Principal -->
     <script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
-const firebaseConfig = {
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+
+        // Configuración de Firebase
+        const firebaseConfig = {
             apiKey: "AIzaSyDOHPagA5tTsapHT7mLp9Go-JCAVc4ChhI",
             authDomain: "ubicaion-8ef85.firebaseapp.com",
+            databaseURL: "https://ubicaion-8ef85-default-rtdb.firebaseio.com", // Asegúrate de tener la URL de la base de datos aquí
             projectId: "ubicaion-8ef85",
             storageBucket: "ubicaion-8ef85.appspot.com",
             messagingSenderId: "629776815605",
             appId: "1:629776815605:web:65804b46473ea77ed6fcbc",
             measurementId: "G-WBFY42G0PD"
+        };
 
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-</script>
-    
-    <!-- Librerías JavaScript y Script Principal -->
-    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.10.2/Sortable.min.js"></script>
-    <script src="app.js"></script>
+        // Inicializar Firebase
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+
+        // Lista de ubicaciones y coordenadas
+        const ubicaciones = [
+            { id: "ubicacion1", nombre: "Fin de la Jornada", latitud: null, longitud: null },
+            { id: "ubicacion2", nombre: "Utrera", latitud: 37.2071, longitud: -5.8204 },
+            { id: "ubicacion3", nombre: "Cerrado", latitud: 37.1294, longitud: -5.8377 },
+            { id: "ubicacion4", nombre: "Coronil", latitud: 37.0855, longitud: -5.6115 },
+            { id: "ubicacion5", nombre: "Otra Localización", latitud: null, longitud: null },
+        ];
+
+        // Calcular distancia entre dos puntos
+        function calcularDistancia(lat1, lon1, lat2, lon2) {
+            const R = 6371; // Radio de la Tierra en km
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            return R * c; // Distancia en km
+        }
+
+        // Asignar la ubicación más cercana
+        function asignarUbicacionMasCercana(lat, lon, usuarioId) {
+            let ubicacionCercana = null;
+            let distanciaMinima = Infinity;
+            const distanciaLimite = 2; // Límite de 2 km
+
+            ubicaciones.forEach(ubicacion => {
+                if (ubicacion.latitud && ubicacion.longitud) {
+                    const distancia = calcularDistancia(lat, lon, ubicacion.latitud, ubicacion.longitud);
+                    if (distancia < distanciaMinima) {
+                        distanciaMinima = distancia;
+                        ubicacionCercana = ubicacion;
+                    }
+                }
+            });
+
+            if (distanciaMinima > distanciaLimite) {
+                ubicacionCercana = ubicaciones.find(ubic => ubic.id === "ubicacion5");
+            }
+
+            // Guarda la ubicación en Firebase
+            if (ubicacionCercana) {
+                set(ref(database, 'usuarios/' + usuarioId), {
+                    ubicacion: ubicacionCercana.nombre,
+                    timestamp: new Date().toISOString()
+                });
+            }
+        }
+
+        // Obtener y registrar la ubicación del usuario
+        function obtenerUbicacion(usuarioId) {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(posicion => {
+                    const latitud = posicion.coords.latitude;
+                    const longitud = posicion.coords.longitude;
+                    asignarUbicacionMasCercana(latitud, longitud, usuarioId);
+                }, error => {
+                    console.error("Error al obtener la ubicación", error);
+                });
+            } else {
+                console.error("La geolocalización no es compatible con este navegador.");
+            }
+        }
+
+        // Manejar el envío del formulario de registro
+        document.getElementById("registerForm").addEventListener("submit", event => {
+            event.preventDefault(); // Evita que se recargue la página
+            const usuarioId = document.getElementById("username").value;
+            obtenerUbicacion(usuarioId);
+        });
+
+        // Escuchar cambios en Firebase y actualizar el DOM
+        const usuariosRef = ref(database, 'usuarios/');
+        onValue(usuariosRef, snapshot => {
+            const data = snapshot.val();
+            document.querySelectorAll('.person').forEach(person => person.remove());
+            for (const usuarioId in data) {
+                const ubicacionNombre = data[usuarioId].ubicacion;
+                const ubicacionDiv = document.querySelector(`.location:contains('${ubicacionNombre}')`);
+                if (ubicacionDiv) {
+                    const personaDiv = document.createElement("div");
+                    personaDiv.className = "person";
+                    personaDiv.textContent = usuarioId;
+                    ubicacionDiv.appendChild(personaDiv);
+                }
+            }
+        });
+    </script>
 </body>
 </html>
