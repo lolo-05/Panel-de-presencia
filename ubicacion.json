@@ -1,0 +1,12 @@
+{
+  "usuarios": {
+    "Manuel de Soto": {
+      "ubicacion": "Utrera",
+      "tiempo": "18:00"
+    },
+    "Juan Lopez": {
+      "ubicacion": "Coronil",
+      "tiempo": "18:05"
+    }
+  }
+}
