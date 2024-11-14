@@ -119,3 +119,64 @@ registerForm.addEventListener('submit', (event) => {
     console.error('Error al guardar datos:', error);
   });
 });
+
+// Importa las funciones necesarias
+import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+
+// Inicializa la base de datos
+const db = getDatabase();
+
+// Selecciona el formulario y el campo de nombre
+const registerForm = document.getElementById('registerForm');
+const usernameSelect = document.getElementById('username');
+
+// Escucha el evento de envío del formulario para registrar ubicación manualmente
+registerForm.addEventListener('submit', (event) => {
+  event.preventDefault();
+
+  const username = usernameSelect.value;
+  const ubicacion = "Utrera"; // Ubicación actual, puedes cambiar esto según tu lógica
+  const tiempo = new Date().toLocaleTimeString();
+
+  set(ref(db, 'usuarios/' + username), {
+    ubicacion: ubicacion,
+    tiempo: tiempo
+  }).then(() => {
+    console.log('Datos guardados exitosamente');
+  }).catch((error) => {
+    console.error('Error al guardar datos:', error);
+  });
+});
+
+// Función para actualizar todos los usuarios a "Fin de la Jornada" a las 18:00
+function actualizarFinDeJornada() {
+  const ahora = new Date();
+  const horaActual = ahora.getHours();
+  const minutoActual = ahora.getMinutes();
+
+  // Verifica si son las 18:00
+  if (horaActual === 18 && minutoActual === 0) {
+    const usuariosRef = ref(db, 'usuarios');
+
+    // Obtén todos los usuarios y actualiza su ubicación
+    get(usuariosRef).then((snapshot) => {
+      if (snapshot.exists()) {
+        snapshot.forEach((childSnapshot) => {
+          const username = childSnapshot.key;
+
+          // Actualiza cada usuario a "Fin de la Jornada"
+          set(ref(db, 'usuarios/' + username), {
+            ubicacion: "Fin de la Jornada",
+            tiempo: ahora.toLocaleTimeString()
+          });
+        });
+        console.log('Todos los usuarios han sido actualizados a Fin de la Jornada');
+      }
+    }).catch((error) => {
+      console.error('Error al actualizar a Fin de la Jornada:', error);
+    });
+  }
+}
+
+// Ejecuta la función cada minuto para verificar si son las 18:00
+setInterval(actualizarFinDeJornada, 60000); // 60000 ms = 1 minuto
