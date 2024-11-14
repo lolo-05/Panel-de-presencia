@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
         { id: "ubicacion5", nombre: "Otra Localización", latitud: null, longitud: null },
     ];
 
-    // Función para calcular la distancia entre dos puntos
+    // Función para calcular la distancia entre dos puntos (en kilómetros)
     function calcularDistancia(lat1, lon1, lat2, lon2) {
         const R = 6371; // Radio de la Tierra en km
         const dLat = (lat2 - lat1) * Math.PI / 180;
@@ -21,12 +21,13 @@ document.addEventListener("DOMContentLoaded", () => {
         return R * c; // Distancia en km
     }
 
-    // Función para asignar la ubicación más cercana
-    function asignarUbicacionMasCercana(lat, lon) {
+    // Función para asignar la ubicación más cercana según las coordenadas
+    function asignarUbicacionMasCercana(lat, lon, usuarioId) {
         let ubicacionCercana = null;
         let distanciaMinima = Infinity;
         const distanciaLimite = 2; // Límite de 2 km
 
+        // Buscar la ubicación más cercana
         ubicaciones.forEach(ubicacion => {
             if (ubicacion.latitud && ubicacion.longitud) {
                 const distancia = calcularDistancia(lat, lon, ubicacion.latitud, ubicacion.longitud);
@@ -37,44 +38,33 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-        // Si está fuera del rango, asignar a "Otra Localización"
+        // Si la ubicación está fuera del límite, asignar "Otra Localización"
         if (distanciaMinima > distanciaLimite) {
             ubicacionCercana = ubicaciones.find(ubic => ubic.id === "ubicacion5");
         }
 
+        // Guardar la ubicación en Firebase
         if (ubicacionCercana) {
-            console.log(`Ubicación asignada: ${ubicacionCercana.nombre}`);
-            const personaNombre = document.getElementById("username").value;
-            let personaDiv = document.querySelector(`.person[data-nombre='${personaNombre}']`);
-
-            // Crear la personaDiv si no existe
-            if (!personaDiv) {
-                personaDiv = document.createElement("div");
-                personaDiv.className = "person";
-                personaDiv.dataset.nombre = personaNombre;
-                personaDiv.textContent = personaNombre;
-            }
-
-            // Si la persona ya está en la ubicación asignada, no hacer nada
-            const nuevaUbicacion = document.getElementById(ubicacionCercana.id);
-            if (nuevaUbicacion && !nuevaUbicacion.contains(personaDiv)) {
-                // Remover de la ubicación anterior y agregar a la nueva
-                if (personaDiv.parentNode) {
-                    personaDiv.parentNode.removeChild(personaDiv);
-                }
-                nuevaUbicacion.appendChild(personaDiv);
-            }
+            const dbRef = firebase.database().ref('usuarios/' + usuarioId);
+            dbRef.set({
+                ubicacion: ubicacionCercana.nombre,
+                timestamp: new Date().toISOString()
+            }).then(() => {
+                console.log(`Ubicación de ${usuarioId} actualizada a: ${ubicacionCercana.nombre}`);
+            }).catch((error) => {
+                console.error("Error al guardar la ubicación:", error);
+            });
         }
     }
 
-    // Función para obtener la ubicación del usuario
-    function obtenerUbicacion() {
+    // Función para obtener la ubicación del usuario mediante geolocalización
+    function obtenerUbicacion(usuarioId) {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(posicion => {
                 const latitud = posicion.coords.latitude;
                 const longitud = posicion.coords.longitude;
                 console.log(`Latitud: ${latitud}, Longitud: ${longitud}`);
-                asignarUbicacionMasCercana(latitud, longitud);
+                asignarUbicacionMasCercana(latitud, longitud, usuarioId);
             }, error => {
                 console.error("Error al obtener la ubicación", error);
             });
@@ -86,6 +76,25 @@ document.addEventListener("DOMContentLoaded", () => {
     // Manejar el envío del formulario de registro
     document.getElementById("registerForm").addEventListener("submit", event => {
         event.preventDefault(); // Evita que se recargue la página
-        obtenerUbicacion();
+        const usuarioId = document.getElementById("username").value;
+        obtenerUbicacion(usuarioId);
+    });
+
+    // Escuchar cambios en Firebase y actualizar el DOM en tiempo real
+    const usuariosRef = firebase.database().ref('usuarios/');
+    usuariosRef.on('value', snapshot => {
+        const data = snapshot.val();
+        // Limpiar las ubicaciones actuales
+        document.querySelectorAll('.person').forEach(person => person.remove());
+        for (const usuarioId in data) {
+            const ubicacionNombre = data[usuarioId].ubicacion;
+            const ubicacionDiv = document.querySelector(`.location:contains('${ubicacionNombre}')`);
+            if (ubicacionDiv) {
+                const personaDiv = document.createElement("div");
+                personaDiv.className = "person";
+                personaDiv.textContent = usuarioId;
+                ubicacionDiv.appendChild(personaDiv);
+            }
+        }
     });
 });
