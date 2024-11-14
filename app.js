@@ -89,3 +89,33 @@ document.addEventListener("DOMContentLoaded", () => {
         obtenerUbicacion();
     });
 });
+
+// Importa las funciones necesarias
+import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+
+// Inicializa la base de datos
+const db = getDatabase();
+
+// Selecciona el formulario y el campo de nombre
+const registerForm = document.getElementById('registerForm');
+const usernameSelect = document.getElementById('username');
+
+// Escucha el evento de envío del formulario
+registerForm.addEventListener('submit', (event) => {
+  event.preventDefault();
+
+  // Obtiene el valor seleccionado en el formulario
+  const username = usernameSelect.value;
+  const ubicacion = "Utrera"; // Aquí puedes ajustar según la lógica que desees
+  const tiempo = new Date().toLocaleTimeString(); // Guarda la hora actual
+
+  // Envía los datos a Firebase
+  set(ref(db, 'usuarios/' + username), {
+    ubicacion: ubicacion,
+    tiempo: tiempo
+  }).then(() => {
+    console.log('Datos guardados exitosamente');
+  }).catch((error) => {
+    console.error('Error al guardar datos:', error);
+  });
+});
